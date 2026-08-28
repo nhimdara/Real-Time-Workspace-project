@@ -15,15 +15,18 @@ cd frontend
 npm run build
 cd ..
 
-# 3. Check Docker status and launch full stack
-if command -v docker-compose &> /dev/null || docker compose version &> /dev/null; then
+# 3. Serving & Execution
+echo "--------------------------------------------------------"
+if command -v docker &> /dev/null && (docker compose version &> /dev/null || command -v docker-compose &> /dev/null); then
   echo "🐳 Launching Docker Compose Full Stack..."
-  docker-compose up --build -d || docker compose up --build -d
-  echo "✅ Application deployed successfully via Docker Compose!"
+  docker compose up --build -d 2>/dev/null || docker-compose up --build -d
+  echo "✅ Application deployed via Docker Compose!"
 else
   echo "✅ Production artifacts built cleanly!"
-  echo "  - Backend JAR: backend/target/workspace-backend-1.0.0.jar"
-  echo "  - Frontend Assets: frontend/dist/"
+  echo "  • Backend JAR: backend/target/workspace-backend-1.0.0.jar"
+  echo "  • Backend Status: Active on http://localhost:8088"
+  echo "  • Frontend Assets: frontend/dist/"
+  echo ""
+  echo "🚀 Serving production frontend build on http://localhost:3000..."
+  npx serve frontend/dist -p 3000
 fi
-
-echo "✨ Deployment Ready!"
