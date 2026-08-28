@@ -184,5 +184,3 @@ All demo accounts have password: **`password123`** (or click the quick 1-click l
 - **Subscribe Destination**: `/topic/page/{pageId}`
 - **Send Destination**: `/app/page/{pageId}/update`
 - **Event Types**: `BLOCK_CREATE`, `BLOCK_UPDATE`, `BLOCK_DELETE`, `BLOCK_BATCH_MOVE`, `CURSOR_MOVE`, `USER_JOIN`, `USER_LEAVE`, `PAGE_UPDATE`.
-#   R e a l - T i m e - W o r k s p a c e - p r o j e c t  
- 
