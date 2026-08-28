@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed bottom-6 right-6 z-50 select-none">
+  <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 select-none">
     <!-- Floating AI Trigger Pill Button -->
     <button
       v-if="!isOpen"
@@ -14,7 +14,7 @@
     <!-- Floating AI Chat Window (Liquid Glass) -->
     <div
       v-else
-      class="w-80 md:w-96 h-[480px] rounded-3xl liquid-glass-modal shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-purple-500/40 flex flex-col overflow-hidden animate-scale-in"
+      class="w-[calc(100vw-2rem)] max-w-sm sm:w-96 h-[460px] sm:h-[480px] rounded-3xl liquid-glass-modal shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-purple-500/40 flex flex-col overflow-hidden animate-scale-in"
     >
       <!-- Chat Header -->
       <div class="px-4 py-3.5 bg-gradient-to-r from-purple-600/90 to-indigo-600/90 backdrop-blur-md text-white flex items-center justify-between shadow-sm">

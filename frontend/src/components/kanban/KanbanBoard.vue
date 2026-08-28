@@ -1,17 +1,17 @@
 <template>
   <div
-    class="flex-1 overflow-x-auto p-6 min-h-[calc(100vh-140px)] select-none"
+    class="flex-1 overflow-x-auto p-3 sm:p-6 min-h-[calc(100vh-140px)] select-none"
     @mousemove="handleMouseMove"
   >
     <!-- Board Header -->
-    <div class="mb-6 flex items-center justify-between">
-      <div class="flex items-center gap-3.5">
-        <span class="text-3xl p-2.5 rounded-2xl liquid-glass shadow-md shadow-brand-500/10 border border-white/50 dark:border-white/10">{{ currentPage?.icon || '📊' }}</span>
+    <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl sm:text-3xl p-2 sm:p-2.5 rounded-2xl liquid-glass shadow-md shadow-brand-500/10 border border-white/50 dark:border-white/10">{{ currentPage?.icon || '📊' }}</span>
         <div>
-          <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {{ currentPage?.title || 'Kanban Board' }}
           </h1>
-          <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
+          <p class="text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400">
             Real-time drag and drop board • {{ kanbanColumns.length }} Columns • {{ totalCards }} Cards
           </p>
         </div>
@@ -19,7 +19,7 @@
 
       <!-- Add Column Button -->
       <button
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-white liquid-glass-btn"
+        class="inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-bold text-white liquid-glass-btn shrink-0"
         @click="showAddColumnModal = true"
       >
         <Plus class="w-4 h-4" /> Add Column
@@ -27,11 +27,11 @@
     </div>
 
     <!-- Columns Container (Draggable Columns) -->
-    <div class="flex items-start gap-5 pb-6">
+    <div class="flex items-start gap-4 sm:gap-5 pb-6 overflow-x-auto snap-x scrollbar-none">
       <div
         v-for="col in kanbanColumns"
         :key="col.id"
-        class="w-80 shrink-0 flex flex-col max-h-[calc(100vh-200px)] rounded-3xl bg-white/40 dark:bg-[#0f172a]/60 border border-white/50 dark:border-white/10 shadow-xl backdrop-blur-2xl"
+        class="w-[280px] sm:w-80 shrink-0 flex flex-col snap-center max-h-[calc(100vh-200px)] rounded-3xl bg-white/40 dark:bg-[#0f172a]/60 border border-white/50 dark:border-white/10 shadow-xl backdrop-blur-2xl"
       >
         <!-- Column Header -->
         <div class="p-4 flex items-center justify-between border-b border-white/30 dark:border-white/10">

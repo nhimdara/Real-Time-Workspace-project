@@ -30,7 +30,7 @@
     <div
       ref="editorContainerRef"
       :class="[
-        'mx-auto px-8 md:px-16 py-8 relative min-h-[calc(100vh-140px)] transition-all duration-200',
+        'mx-auto px-3 sm:px-8 md:px-16 py-4 md:py-8 relative min-h-[calc(100vh-140px)] transition-all duration-200',
         isFullWidth ? 'max-w-7xl' : 'max-w-4xl',
         fontStyle === 'serif' ? 'font-serif' : fontStyle === 'mono' ? 'font-mono' : 'font-sans',
         isSmallText ? 'text-xs' : 'text-sm'

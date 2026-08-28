@@ -28,5 +28,5 @@ else
   echo "  • Frontend Assets: frontend/dist/"
   echo ""
   echo "🚀 Serving production frontend build on http://0.0.0.0:3000..."
-  npx serve frontend/dist -p 3000 --host 0.0.0.0
+  npx serve -s frontend/dist -l 3000
 fi

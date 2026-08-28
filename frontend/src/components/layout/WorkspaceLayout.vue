@@ -1,9 +1,19 @@
 <template>
-  <div class="flex h-screen overflow-hidden text-[#37352f] dark:text-[#e2e8f0] font-sans">
+  <div class="flex h-screen overflow-hidden text-[#37352f] dark:text-[#e2e8f0] font-sans relative">
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div
+      v-if="isMobileSidebarOpen"
+      class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-30 md:hidden animate-fade-in"
+      @click="isMobileSidebarOpen = false"
+    ></div>
+
     <!-- Liquid Glass Sidebar -->
     <aside
-      class="h-full flex flex-col transition-all duration-250 ease-in-out border-r border-white/40 dark:border-white/10 bg-white/60 dark:bg-[#0f172a]/70 backdrop-blur-2xl z-20 select-none text-[13px] shadow-2xl shadow-black/5"
-      :class="isSidebarCollapsed ? 'w-14' : 'w-64'"
+      class="h-full flex flex-col transition-all duration-300 ease-in-out border-r border-white/40 dark:border-white/10 bg-white/70 dark:bg-[#0f172a]/90 backdrop-blur-2xl z-40 select-none text-[13px] shadow-2xl shadow-black/5 fixed md:static inset-y-0 left-0"
+      :class="[
+        isSidebarCollapsed ? 'w-14' : 'w-64',
+        isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      ]"
     >
       <!-- Workspace Switcher Header -->
       <div class="p-3 flex items-center justify-between border-b border-white/30 dark:border-white/10">
@@ -199,14 +209,22 @@
     <!-- Main Notion Canvas -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
       <!-- Notion Top Navigation Bar (Liquid Glass) -->
-      <header class="h-12 border-b border-white/30 dark:border-white/10 bg-white/40 dark:bg-[#0f172a]/50 backdrop-blur-xl px-6 flex items-center justify-between z-10 select-none text-xs shadow-sm">
-        <!-- Breadcrumb & Star -->
+      <header class="h-12 border-b border-white/30 dark:border-white/10 bg-white/40 dark:bg-[#0f172a]/50 backdrop-blur-xl px-3 md:px-6 flex items-center justify-between z-10 select-none text-xs shadow-sm">
+        <!-- Breadcrumb & Mobile Menu Toggle -->
         <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 min-w-0">
-          <span class="truncate hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer font-medium">{{ currentWorkspace?.name }}</span>
-          <span class="opacity-40">/</span>
+          <button
+            class="md:hidden p-1.5 rounded-xl text-slate-600 dark:text-slate-200 hover:bg-white/50 dark:hover:bg-white/10 transition-colors shrink-0"
+            title="Toggle Menu"
+            @click="isMobileSidebarOpen = !isMobileSidebarOpen"
+          >
+            <Menu class="w-4 h-4" />
+          </button>
+
+          <span class="truncate hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer font-medium hidden sm:inline">{{ currentWorkspace?.name }}</span>
+          <span class="opacity-40 hidden sm:inline">/</span>
           <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 truncate">
             <span>{{ currentPage?.icon || '📄' }}</span>
-            <span class="truncate">{{ currentPage?.title || 'Untitled' }}</span>
+            <span class="truncate text-xs md:text-xs">{{ currentPage?.title || 'Untitled' }}</span>
           </div>
 
           <button
@@ -389,6 +407,7 @@ import { ref, computed } from 'vue'
 import {
   PanelLeftClose,
   PanelLeftOpen,
+  Menu,
   Search,
   Sparkles,
   Settings,
@@ -410,6 +429,7 @@ const workspaceStore = useWorkspaceStore()
 const authStore = useAuthStore()
 
 const isSidebarCollapsed = ref(false)
+const isMobileSidebarOpen = ref(false)
 const isDark = ref(document.documentElement.classList.contains('dark'))
 const showCommandPalette = ref(false)
 
