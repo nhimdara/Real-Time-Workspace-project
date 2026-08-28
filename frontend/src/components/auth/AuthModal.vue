@@ -6,7 +6,7 @@
       <div class="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-gradient-to-bl from-teal-400/25 to-indigo-500/20 rounded-full blur-3xl animate-blob-2"></div>
     </div>
 
-    <div class="w-full max-w-md p-8 rounded-3xl liquid-glass-modal relative z-10 animate-scale-in">
+    <div class="w-[calc(100vw-2rem)] max-w-md p-5 sm:p-8 rounded-3xl liquid-glass-modal relative z-10 animate-scale-in">
       <!-- App Brand Logo -->
       <div class="flex items-center justify-center gap-3 mb-6">
         <div class="p-3 rounded-2xl bg-gradient-to-tr from-brand-500/30 to-emerald-400/20 text-brand-400 border border-white/40 dark:border-white/10 shadow-lg backdrop-blur-md">

@@ -195,7 +195,7 @@
           >
             <!-- Notion-Style Left Gutter Drag Handle & Actions -->
             <div
-              class="absolute -left-14 top-1 opacity-0 group-hover:opacity-100 flex items-center gap-0.5 transition-opacity select-none z-10"
+              class="absolute -left-10 sm:-left-14 top-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 flex items-center gap-0.5 transition-opacity select-none z-10"
             >
               <button
                 class="p-1 text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 rounded hover:bg-slate-200 dark:hover:bg-slate-700"

@@ -1,11 +1,11 @@
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-slate-950/40 backdrop-blur-md animate-fade-in"
+    class="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-3 sm:px-4 bg-slate-950/40 backdrop-blur-md animate-fade-in"
     @click.self="close"
   >
     <div
-      class="w-full max-w-xl rounded-3xl liquid-glass-modal overflow-hidden animate-scale-in flex flex-col shadow-2xl"
+      class="w-[calc(100vw-2rem)] max-w-xl rounded-3xl liquid-glass-modal overflow-hidden animate-scale-in flex flex-col shadow-2xl"
     >
       <!-- Search Input Header -->
       <div class="flex items-center gap-3 px-4 py-3.5 border-b border-white/30 dark:border-white/10">

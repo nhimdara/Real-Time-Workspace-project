@@ -238,9 +238,9 @@
         </div>
 
         <!-- Right Action Items: View Toggle, Online Peers, Share, Options -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <!-- Active Online Collaboration Avatars -->
-          <div class="flex items-center -space-x-1.5">
+          <div class="hidden sm:flex items-center -space-x-1.5">
             <div
               v-for="peer in activePeers"
               :key="peer.userId"
@@ -268,32 +268,32 @@
           </div>
 
           <!-- Document vs Kanban Mode Switcher -->
-          <div class="flex items-center bg-white/40 dark:bg-white/10 p-1 rounded-xl border border-white/40 dark:border-white/10 backdrop-blur-md shadow-2xs shrink-0">
+          <div class="flex items-center bg-white/40 dark:bg-white/10 p-0.5 sm:p-1 rounded-xl border border-white/40 dark:border-white/10 backdrop-blur-md shadow-2xs shrink-0">
             <button
-              class="px-2.5 py-1 rounded-lg transition-all flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap"
+              class="px-2 sm:px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 sm:gap-1.5 text-xs font-semibold whitespace-nowrap"
               :class="!currentPage?.isKanban ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md border border-white/60 dark:border-white/10' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'"
               @click="togglePageType(false)"
             >
               <FileText class="w-3.5 h-3.5 shrink-0" />
-              <span>Doc</span>
+              <span class="hidden xs:inline">Doc</span>
             </button>
             <button
-              class="px-2.5 py-1 rounded-lg transition-all flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap"
+              class="px-2 sm:px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 sm:gap-1.5 text-xs font-semibold whitespace-nowrap"
               :class="currentPage?.isKanban ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md border border-white/60 dark:border-white/10' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'"
               @click="togglePageType(true)"
             >
               <Kanban class="w-3.5 h-3.5 shrink-0" />
-              <span>Board</span>
+              <span class="hidden xs:inline">Board</span>
             </button>
           </div>
 
           <!-- Share Button -->
           <button
-            class="px-3 py-1.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 bg-white/50 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 border border-white/40 dark:border-white/10 backdrop-blur-md transition-all flex items-center gap-1.5 shadow-2xs whitespace-nowrap shrink-0"
+            class="px-2.5 sm:px-3 py-1.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 bg-white/50 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 border border-white/40 dark:border-white/10 backdrop-blur-md transition-all flex items-center gap-1 sm:gap-1.5 shadow-2xs whitespace-nowrap shrink-0 text-xs"
             @click="showInviteModal = true"
           >
             <Share2 class="w-3.5 h-3.5 text-brand-500 shrink-0" />
-            <span>Share</span>
+            <span class="hidden xs:inline">Share</span>
           </button>
         </div>
       </header>
