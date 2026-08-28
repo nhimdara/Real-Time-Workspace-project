@@ -1,0 +1,17 @@
+/// <reference types="vite/client" />
+
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue'
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}
+
+declare module 'vuedraggable' {
+  const draggable: any
+  export default draggable
+}
+
+declare module 'sockjs-client' {
+  const SockJS: any
+  export default SockJS
+}
