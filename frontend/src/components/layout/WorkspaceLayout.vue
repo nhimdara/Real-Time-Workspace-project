@@ -1,25 +1,26 @@
 <template>
-  <div class="flex h-screen overflow-hidden bg-white dark:bg-[#191919] text-[#37352f] dark:text-[#d4d4d4] font-sans">
-    <!-- Notion-Style Sidebar -->
+  <div class="flex h-screen overflow-hidden text-[#37352f] dark:text-[#e2e8f0] font-sans">
+    <!-- Liquid Glass Sidebar -->
     <aside
-      class="h-full flex flex-col transition-all duration-200 ease-in-out border-r border-slate-200 dark:border-[#2f2f2f] bg-[#f7f6f3] dark:bg-[#202020] z-20 select-none text-[13px]"
+      class="h-full flex flex-col transition-all duration-250 ease-in-out border-r border-white/40 dark:border-white/10 bg-white/60 dark:bg-[#0f172a]/70 backdrop-blur-2xl z-20 select-none text-[13px] shadow-2xl shadow-black/5"
       :class="isSidebarCollapsed ? 'w-14' : 'w-64'"
     >
       <!-- Workspace Switcher Header -->
-      <div class="p-3 flex items-center justify-between border-b border-slate-200/60 dark:border-[#2a2a2a]">
+      <div class="p-3 flex items-center justify-between border-b border-white/30 dark:border-white/10">
         <div v-if="!isSidebarCollapsed" class="flex items-center gap-2.5 min-w-0">
-          <div class="w-6 h-6 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xs shadow-sm shrink-0">
+          <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 text-white flex items-center justify-center font-bold text-xs shadow-md shadow-brand-500/30 border border-white/40 shrink-0">
             {{ currentWorkspace?.name.charAt(0) || 'W' }}
           </div>
           <div class="min-w-0">
-            <h2 class="text-xs font-semibold truncate text-slate-800 dark:text-slate-200">
+            <h2 class="text-xs font-bold truncate text-slate-800 dark:text-slate-100 tracking-tight">
               {{ currentWorkspace?.name || 'Workspace' }}
             </h2>
+            <span class="text-[10px] text-brand-600 dark:text-brand-400 font-medium block">Pro Workspace</span>
           </div>
         </div>
 
         <button
-          class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/70 dark:hover:bg-[#2f2f2f]"
+          class="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-100 hover:bg-white/50 dark:hover:bg-white/10 transition-colors backdrop-blur-sm"
           :title="isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'"
           @click="isSidebarCollapsed = !isSidebarCollapsed"
         >
@@ -29,31 +30,31 @@
       </div>
 
       <!-- Quick Find, AI & System Links -->
-      <div v-if="!isSidebarCollapsed" class="px-2 pt-2 space-y-0.5">
+      <div v-if="!isSidebarCollapsed" class="px-2.5 pt-2.5 space-y-1">
         <!-- Quick Search -->
         <button
-          class="w-full px-2.5 py-1.5 rounded-lg flex items-center justify-between text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-[#2a2a2a] transition-colors group text-xs"
+          class="w-full px-3 py-1.5 rounded-xl flex items-center justify-between text-slate-600 dark:text-slate-300 bg-white/40 dark:bg-white/5 hover:bg-white/80 dark:hover:bg-white/10 border border-white/40 dark:border-white/10 backdrop-blur-md transition-all shadow-sm group text-xs"
           @click="showCommandPalette = true"
         >
           <div class="flex items-center gap-2">
-            <Search class="w-3.5 h-3.5" />
+            <Search class="w-3.5 h-3.5 text-brand-500" />
             <span>Search</span>
           </div>
-          <kbd class="text-[10px] font-mono text-slate-400 dark:text-slate-500 bg-slate-200 dark:bg-[#333] px-1.5 py-0.5 rounded">Ctrl+K</kbd>
+          <kbd class="text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-white/60 dark:bg-slate-800/80 px-1.5 py-0.5 rounded-md border border-white/40 dark:border-slate-700 shadow-2xs">Ctrl+K</kbd>
         </button>
 
         <!-- Notion AI Search -->
         <button
-          class="w-full px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-colors text-xs font-medium"
+          class="w-full px-3 py-1.5 rounded-xl flex items-center gap-2 text-purple-600 dark:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 backdrop-blur-md transition-all text-xs font-semibold shadow-sm"
           @click="showCommandPalette = true"
         >
-          <Sparkles class="w-3.5 h-3.5" />
+          <Sparkles class="w-3.5 h-3.5 text-purple-500 animate-pulse" />
           <span>Ask AI</span>
         </button>
 
         <!-- Settings & Members -->
         <button
-          class="w-full px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-[#2a2a2a] transition-colors text-xs"
+          class="w-full px-3 py-1.5 rounded-xl flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-white/10 transition-colors text-xs"
           @click="showInviteModal = true"
         >
           <Settings class="w-3.5 h-3.5" />
@@ -62,10 +63,10 @@
       </div>
 
       <!-- Navigation & Pages Tree -->
-      <div class="flex-1 overflow-y-auto px-2 py-3 space-y-4">
+      <div class="flex-1 overflow-y-auto px-2.5 py-3 space-y-4">
         <!-- Favorites Section -->
         <div v-if="!isSidebarCollapsed && favoritePages.length > 0">
-          <div class="px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+          <div class="px-2 py-1 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
             <Star class="w-3 h-3 fill-amber-400 text-amber-400" />
             <span>Favorites</span>
           </div>
@@ -73,8 +74,8 @@
             <button
               v-for="page in favoritePages"
               :key="'fav-' + page.id"
-              class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors"
-              :class="currentPage?.id === page.id ? 'bg-slate-200/80 dark:bg-[#2f2f2f] text-slate-900 dark:text-white font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-[#2a2a2a]'"
+              class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs transition-all"
+              :class="currentPage?.id === page.id ? 'bg-white/80 dark:bg-white/15 text-slate-900 dark:text-white font-bold border border-white/60 dark:border-white/20 shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-white/10'"
               @click="selectPage(page.id)"
             >
               <div class="flex items-center gap-2 min-w-0">
@@ -87,10 +88,10 @@
 
         <!-- Teamspaces / Pages Section -->
         <div v-if="!isSidebarCollapsed">
-          <div class="flex items-center justify-between px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+          <div class="flex items-center justify-between px-2 py-1 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
             <span>Pages</span>
             <button
-              class="p-1 rounded hover:bg-slate-200 dark:hover:bg-[#2f2f2f] text-slate-500 hover:text-brand-500 transition-colors"
+              class="p-1 rounded-lg hover:bg-white/60 dark:hover:bg-white/15 text-slate-400 hover:text-brand-500 transition-colors"
               title="Add Page"
               @click="showCreatePageModal = true"
             >
@@ -103,8 +104,8 @@
             <div
               v-for="page in pages"
               :key="page.id"
-              class="group/page flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors"
-              :class="currentPage?.id === page.id ? 'bg-slate-200/90 dark:bg-[#2f2f2f] text-slate-900 dark:text-white font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-[#2a2a2a]'"
+              class="group/page flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs transition-all"
+              :class="currentPage?.id === page.id ? 'bg-white/80 dark:bg-white/15 text-slate-900 dark:text-white font-bold border border-white/60 dark:border-white/20 shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-white/10'"
             >
               <button
                 class="flex-1 flex items-center gap-2 min-w-0 text-left"
@@ -117,18 +118,18 @@
               <!-- Page Quick Actions -->
               <div class="opacity-0 group-hover/page:opacity-100 flex items-center gap-1 shrink-0">
                 <button
-                  class="p-0.5 rounded text-slate-400 hover:text-amber-400"
+                  class="p-0.5 rounded text-slate-400 hover:text-amber-400 transition-colors"
                   :title="isFavorite(page.id) ? 'Remove Favorite' : 'Add to Favorites'"
                   @click.stop="toggleFavorite(page.id)"
                 >
                   <Star class="w-3 h-3" :class="isFavorite(page.id) ? 'fill-amber-400 text-amber-400' : ''" />
                 </button>
                 <button
-                  class="p-0.5 rounded text-slate-400 hover:text-red-500"
+                  class="p-0.5 rounded text-slate-400 hover:text-red-500 transition-colors"
                   title="Delete page"
                   @click.stop="deletePage(page.id)"
                 >
-                  <Trash2 class="w-3 h-3" />
+                  <Trash2 class="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
@@ -140,8 +141,8 @@
           <button
             v-for="page in pages"
             :key="page.id"
-            class="w-9 h-9 rounded-xl flex items-center justify-center text-base transition-colors"
-            :class="currentPage?.id === page.id ? 'bg-slate-200 dark:bg-[#2f2f2f]' : 'hover:bg-slate-200/60 dark:hover:bg-[#2a2a2a]'"
+            class="w-9 h-9 rounded-2xl flex items-center justify-center text-base transition-all"
+            :class="currentPage?.id === page.id ? 'bg-white/80 dark:bg-white/20 shadow-md border border-white/50 dark:border-white/20' : 'hover:bg-white/50 dark:hover:bg-white/10'"
             :title="page.title"
             @click="selectPage(page.id)"
           >
@@ -151,11 +152,11 @@
       </div>
 
       <!-- Bottom New Page Button & User Bar -->
-      <div class="p-2 border-t border-slate-200/60 dark:border-[#2a2a2a] bg-[#f7f6f3] dark:bg-[#202020]">
+      <div class="p-2.5 border-t border-white/30 dark:border-white/10">
         <!-- + New Page Button -->
         <button
           v-if="!isSidebarCollapsed"
-          class="w-full py-1.5 px-3 mb-2 rounded-lg border border-dashed border-slate-300 dark:border-[#353535] text-xs font-medium text-slate-600 dark:text-slate-400 hover:border-brand-500 hover:text-brand-500 dark:hover:border-brand-500 dark:hover:text-brand-400 flex items-center justify-center gap-1.5 transition-all"
+          class="w-full py-2 px-3 mb-2.5 rounded-xl border border-dashed border-slate-300/80 dark:border-slate-700/80 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:border-brand-500 hover:text-brand-500 dark:hover:border-brand-400 dark:hover:text-brand-400 bg-white/30 dark:bg-white/5 hover:bg-white/60 dark:hover:bg-white/10 flex items-center justify-center gap-1.5 transition-all shadow-sm"
           @click="showCreatePageModal = true"
         >
           <Plus class="w-3.5 h-3.5" />
@@ -166,25 +167,25 @@
           <div class="flex items-center gap-2 min-w-0">
             <img
               :src="authStore.user?.avatarUrl"
-              class="w-6 h-6 rounded-full object-cover border border-slate-300 dark:border-slate-700 shrink-0"
+              class="w-7 h-7 rounded-full object-cover border-2 border-white/60 dark:border-white/20 shadow-sm shrink-0"
               alt="Avatar"
             />
-            <span class="text-xs font-medium truncate text-slate-800 dark:text-slate-200">
+            <span class="text-xs font-semibold truncate text-slate-800 dark:text-slate-200">
               {{ authStore.user?.name }}
             </span>
           </div>
 
           <div class="flex items-center gap-1">
             <button
-              class="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#2f2f2f]"
+              class="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-100 hover:bg-white/50 dark:hover:bg-white/10 transition-colors"
               title="Toggle Dark Mode"
               @click="toggleDarkMode"
             >
-              <Sun v-if="isDark" class="w-3.5 h-3.5" />
+              <Sun v-if="isDark" class="w-3.5 h-3.5 text-amber-400" />
               <Moon v-else class="w-3.5 h-3.5" />
             </button>
             <button
-              class="p-1 rounded-lg text-slate-400 hover:text-red-500 hover:bg-slate-200 dark:hover:bg-[#2f2f2f]"
+              class="p-1.5 rounded-xl text-slate-400 hover:text-red-500 hover:bg-white/50 dark:hover:bg-white/10 transition-colors"
               title="Sign Out"
               @click="authStore.logout()"
             >
@@ -196,21 +197,21 @@
     </aside>
 
     <!-- Main Notion Canvas -->
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white dark:bg-[#191919]">
-      <!-- Notion Top Navigation Bar -->
-      <header class="h-12 border-b border-slate-200/60 dark:border-[#2a2a2a] px-6 flex items-center justify-between z-10 select-none text-xs">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <!-- Notion Top Navigation Bar (Liquid Glass) -->
+      <header class="h-12 border-b border-white/30 dark:border-white/10 bg-white/40 dark:bg-[#0f172a]/50 backdrop-blur-xl px-6 flex items-center justify-between z-10 select-none text-xs shadow-sm">
         <!-- Breadcrumb & Star -->
         <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 min-w-0">
-          <span class="truncate hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer">{{ currentWorkspace?.name }}</span>
-          <span>/</span>
-          <div class="flex items-center gap-1.5 font-medium text-slate-900 dark:text-slate-100 truncate">
+          <span class="truncate hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer font-medium">{{ currentWorkspace?.name }}</span>
+          <span class="opacity-40">/</span>
+          <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 truncate">
             <span>{{ currentPage?.icon || '📄' }}</span>
             <span class="truncate">{{ currentPage?.title || 'Untitled' }}</span>
           </div>
 
           <button
             v-if="currentPage"
-            class="p-1 rounded text-slate-400 hover:text-amber-400 transition-colors ml-1"
+            class="p-1 rounded-lg text-slate-400 hover:text-amber-400 transition-colors ml-1"
             title="Favorite Page"
             @click="toggleFavorite(currentPage.id)"
           >
@@ -229,11 +230,11 @@
             >
               <img
                 :src="peer.userAvatar"
-                class="w-6 h-6 rounded-full object-cover border-2 border-white dark:border-[#191919] shadow-sm"
+                class="w-6 h-6 rounded-full object-cover border-2 border-white dark:border-[#0f172a] shadow-sm"
                 :title="peer.userName"
               />
               <span
-                class="absolute bottom-0 right-0 w-1.5 h-1.5 rounded-full ring-1 ring-white dark:ring-[#191919]"
+                class="absolute bottom-0 right-0 w-1.5 h-1.5 rounded-full ring-1 ring-white dark:ring-[#0f172a]"
                 :style="{ backgroundColor: peer.color || '#22c55e' }"
               ></span>
             </div>
@@ -249,31 +250,31 @@
           </div>
 
           <!-- Document vs Kanban Mode Switcher -->
-          <div class="flex items-center bg-slate-100 dark:bg-[#202020] p-0.5 rounded-lg border border-slate-200/80 dark:border-[#2f2f2f]">
+          <div class="flex items-center bg-white/40 dark:bg-white/10 p-1 rounded-xl border border-white/40 dark:border-white/10 backdrop-blur-md shadow-2xs shrink-0">
             <button
-              class="px-2 py-1 rounded-md transition-all flex items-center gap-1"
-              :class="!currentPage?.isKanban ? 'bg-white dark:bg-[#2f2f2f] text-slate-900 dark:text-white font-semibold shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'"
+              class="px-2.5 py-1 rounded-lg transition-all flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap"
+              :class="!currentPage?.isKanban ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md border border-white/60 dark:border-white/10' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'"
               @click="togglePageType(false)"
             >
-              <FileText class="w-3.5 h-3.5" />
+              <FileText class="w-3.5 h-3.5 shrink-0" />
               <span>Doc</span>
             </button>
             <button
-              class="px-2 py-1 rounded-md transition-all flex items-center gap-1"
-              :class="currentPage?.isKanban ? 'bg-white dark:bg-[#2f2f2f] text-slate-900 dark:text-white font-semibold shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'"
+              class="px-2.5 py-1 rounded-lg transition-all flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap"
+              :class="currentPage?.isKanban ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md border border-white/60 dark:border-white/10' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'"
               @click="togglePageType(true)"
             >
-              <Kanban class="w-3.5 h-3.5" />
+              <Kanban class="w-3.5 h-3.5 shrink-0" />
               <span>Board</span>
             </button>
           </div>
 
           <!-- Share Button -->
           <button
-            class="px-3 py-1 rounded-lg font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-[#202020] hover:bg-slate-200 dark:hover:bg-[#2a2a2a] transition-colors flex items-center gap-1.5"
+            class="px-3 py-1.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 bg-white/50 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 border border-white/40 dark:border-white/10 backdrop-blur-md transition-all flex items-center gap-1.5 shadow-2xs whitespace-nowrap shrink-0"
             @click="showInviteModal = true"
           >
-            <Share2 class="w-3.5 h-3.5" />
+            <Share2 class="w-3.5 h-3.5 text-brand-500 shrink-0" />
             <span>Share</span>
           </button>
         </div>
@@ -291,20 +292,20 @@
       @close="showCommandPalette = false"
     />
 
-    <!-- Create Page Modal -->
+    <!-- Create Page Modal (Liquid Glass) -->
     <div
       v-if="showCreatePageModal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 backdrop-blur-md animate-fade-in"
       @click.self="showCreatePageModal = false"
     >
-      <div class="w-full max-w-sm p-6 rounded-3xl bg-white dark:bg-[#202020] border border-slate-200 dark:border-[#2f2f2f] shadow-2xl animate-scale-in">
+      <div class="w-full max-w-sm p-6 rounded-3xl liquid-glass-modal animate-scale-in">
         <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 mb-4">Create New Page</h3>
         <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Page Title</label>
         <input
           v-model="newPageTitle"
           type="text"
           placeholder="e.g. Project Roadmap"
-          class="w-full px-3.5 py-2 rounded-xl text-xs bg-slate-100 dark:bg-[#2a2a2a] border border-slate-200 dark:border-[#353535] text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 outline-none mb-4"
+          class="w-full px-3.5 py-2.5 rounded-xl text-xs liquid-glass-input text-slate-900 dark:text-slate-100 outline-none mb-4"
           @keydown.enter="submitCreatePage"
         />
 
@@ -312,16 +313,16 @@
         <div class="grid grid-cols-2 gap-2 mb-6">
           <button
             type="button"
-            class="p-3 rounded-2xl border text-xs font-semibold flex flex-col items-center gap-1.5 transition-all"
-            :class="!newPageIsKanban ? 'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-400' : 'border-slate-200 dark:border-[#2f2f2f] text-slate-500'"
+            class="p-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all"
+            :class="!newPageIsKanban ? 'border-brand-500 bg-brand-500/15 text-brand-600 dark:text-brand-400 shadow-md shadow-brand-500/10' : 'border-white/30 dark:border-white/10 bg-white/20 dark:bg-white/5 text-slate-500'"
             @click="newPageIsKanban = false"
           >
             <FileText class="w-5 h-5" /> Document (Notion)
           </button>
           <button
             type="button"
-            class="p-3 rounded-2xl border text-xs font-semibold flex flex-col items-center gap-1.5 transition-all"
-            :class="newPageIsKanban ? 'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-400' : 'border-slate-200 dark:border-[#2f2f2f] text-slate-500'"
+            class="p-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all"
+            :class="newPageIsKanban ? 'border-brand-500 bg-brand-500/15 text-brand-600 dark:text-brand-400 shadow-md shadow-brand-500/10' : 'border-white/30 dark:border-white/10 bg-white/20 dark:bg-white/5 text-slate-500'"
             @click="newPageIsKanban = true"
           >
             <Kanban class="w-5 h-5" /> Board (Trello)
@@ -330,13 +331,13 @@
 
         <div class="flex items-center justify-end gap-2">
           <button
-            class="px-3.5 py-1.5 text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            class="px-3.5 py-2 text-xs font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             @click="showCreatePageModal = false"
           >
             Cancel
           </button>
           <button
-            class="px-4 py-1.5 rounded-xl text-xs font-semibold text-white bg-brand-600 hover:bg-brand-500 shadow-md"
+            class="px-4 py-2 rounded-xl text-xs font-bold text-white liquid-glass-btn"
             @click="submitCreatePage"
           >
             Create Page
@@ -345,13 +346,13 @@
       </div>
     </div>
 
-    <!-- Share / Invite Modal -->
+    <!-- Share / Invite Modal (Liquid Glass) -->
     <div
       v-if="showInviteModal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 backdrop-blur-md animate-fade-in"
       @click.self="showInviteModal = false"
     >
-      <div class="w-full max-w-sm p-6 rounded-3xl bg-white dark:bg-[#202020] border border-slate-200 dark:border-[#2f2f2f] shadow-2xl animate-scale-in">
+      <div class="w-full max-w-sm p-6 rounded-3xl liquid-glass-modal animate-scale-in">
         <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 mb-1">Share & Invite</h3>
         <p class="text-xs text-slate-400 mb-4">Collaborate on this workspace in real time.</p>
         
@@ -360,19 +361,19 @@
           v-model="inviteEmail"
           type="email"
           placeholder="colleague@workspace.io"
-          class="w-full px-3.5 py-2 rounded-xl text-xs bg-slate-100 dark:bg-[#2a2a2a] border border-slate-200 dark:border-[#353535] text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 outline-none mb-4"
+          class="w-full px-3.5 py-2.5 rounded-xl text-xs liquid-glass-input text-slate-900 dark:text-slate-100 outline-none mb-4"
           @keydown.enter="submitInvite"
         />
 
         <div class="flex items-center justify-end gap-2">
           <button
-            class="px-3.5 py-1.5 text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            class="px-3.5 py-2 text-xs font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             @click="showInviteModal = false"
           >
             Cancel
           </button>
           <button
-            class="px-4 py-1.5 rounded-xl text-xs font-semibold text-white bg-brand-600 hover:bg-brand-500 shadow-md"
+            class="px-4 py-2 rounded-xl text-xs font-bold text-white liquid-glass-btn"
             @click="submitInvite"
           >
             Send Invite

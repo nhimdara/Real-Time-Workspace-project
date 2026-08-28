@@ -85,7 +85,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function logout() {
+  async function logout() {
+    try {
+      await api.post('/auth/logout')
+    } catch {
+      // ignore
+    }
     token.value = null
     user.value = null
     localStorage.removeItem('workspace_token')

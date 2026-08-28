@@ -1,0 +1,10 @@
+# Build outputs
+**/target/
+**/dist/
+**/node_modules/
+
+# IDE & OS files
+.idea/
+.vscode/
+*.swp
+*.DS_Store

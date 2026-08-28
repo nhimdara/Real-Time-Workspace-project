@@ -1,43 +1,43 @@
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+    class="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-slate-950/40 backdrop-blur-md animate-fade-in"
     @click.self="close"
   >
     <div
-      class="w-full max-w-xl rounded-2xl bg-white dark:bg-[#202020] border border-slate-200 dark:border-[#2f2f2f] shadow-2xl overflow-hidden animate-scale-in flex flex-col"
+      class="w-full max-w-xl rounded-3xl liquid-glass-modal overflow-hidden animate-scale-in flex flex-col shadow-2xl"
     >
       <!-- Search Input Header -->
-      <div class="flex items-center gap-3 px-4 py-3 border-b border-slate-200 dark:border-[#2f2f2f]">
-        <Search class="w-4 h-4 text-slate-400 shrink-0" />
+      <div class="flex items-center gap-3 px-4 py-3.5 border-b border-white/30 dark:border-white/10">
+        <Search class="w-4 h-4 text-brand-500 shrink-0" />
         <input
           ref="inputRef"
           v-model="searchQuery"
           type="text"
           placeholder="Search pages or type a command..."
-          class="w-full bg-transparent border-none outline-none text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400"
+          class="w-full bg-transparent border-none outline-none text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 font-medium"
           @keydown.down.prevent="navigateDown"
           @keydown.up.prevent="navigateUp"
           @keydown.enter.prevent="selectCurrent"
           @keydown.esc="close"
         />
-        <kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-[#2f2f2f] text-[10px] font-mono text-slate-500">ESC</kbd>
+        <kbd class="px-2 py-0.5 rounded-md bg-white/60 dark:bg-white/10 text-[10px] font-mono text-slate-500 dark:text-slate-400 border border-white/40 dark:border-white/10 shadow-2xs">ESC</kbd>
       </div>
 
       <!-- Results List -->
-      <div class="max-h-80 overflow-y-auto p-2 space-y-1">
+      <div class="max-h-80 overflow-y-auto p-2.5 space-y-1">
         <div v-if="filteredPages.length > 0">
-          <div class="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          <div class="px-2.5 py-1 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
             Pages
           </div>
           <button
             v-for="(page, idx) in filteredPages"
             :key="page.id"
             :class="[
-              'w-full px-3 py-2 rounded-xl text-left flex items-center justify-between text-xs transition-colors',
+              'w-full px-3.5 py-2.5 rounded-xl text-left flex items-center justify-between text-xs transition-all',
               selectedIndex === idx
-                ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 font-semibold'
-                : 'hover:bg-slate-100 dark:hover:bg-[#2a2a2a] text-slate-700 dark:text-slate-300'
+                ? 'bg-white/80 dark:bg-white/15 text-slate-900 dark:text-white font-bold border border-white/60 dark:border-white/20 shadow-sm'
+                : 'hover:bg-white/50 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300'
             ]"
             @click="goToPage(page.id)"
             @mouseenter="selectedIndex = idx"
@@ -46,24 +46,24 @@
               <span class="text-base">{{ page.icon || (page.isKanban ? '📊' : '📄') }}</span>
               <span class="truncate">{{ page.title || 'Untitled' }}</span>
             </div>
-            <span class="text-[10px] text-slate-400 uppercase">{{ page.isKanban ? 'Board' : 'Page' }}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/50 dark:bg-white/10 text-slate-500 dark:text-slate-400 uppercase border border-white/30 dark:border-white/10">{{ page.isKanban ? 'Board' : 'Page' }}</span>
           </button>
         </div>
 
         <!-- Quick Actions -->
-        <div class="pt-2 border-t border-slate-100 dark:border-[#2f2f2f] mt-1">
-          <div class="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        <div class="pt-2 border-t border-white/30 dark:border-white/10 mt-1">
+          <div class="px-2.5 py-1 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
             Quick Actions
           </div>
           <button
-            class="w-full px-3 py-2 rounded-xl text-left flex items-center gap-2.5 text-xs hover:bg-slate-100 dark:hover:bg-[#2a2a2a] text-slate-700 dark:text-slate-300 transition-colors"
+            class="w-full px-3.5 py-2.5 rounded-xl text-left flex items-center gap-2.5 text-xs hover:bg-white/50 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 transition-all font-semibold"
             @click="createNewDoc"
           >
             <Plus class="w-4 h-4 text-brand-500" />
             <span>Create new document</span>
           </button>
           <button
-            class="w-full px-3 py-2 rounded-xl text-left flex items-center gap-2.5 text-xs hover:bg-slate-100 dark:hover:bg-[#2a2a2a] text-slate-700 dark:text-slate-300 transition-colors"
+            class="w-full px-3.5 py-2.5 rounded-xl text-left flex items-center gap-2.5 text-xs hover:bg-white/50 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 transition-all font-semibold"
             @click="createNewBoard"
           >
             <Kanban class="w-4 h-4 text-brand-500" />
@@ -71,7 +71,7 @@
           </button>
         </div>
 
-        <div v-if="filteredPages.length === 0 && searchQuery" class="py-6 text-center text-xs text-slate-400">
+        <div v-if="filteredPages.length === 0 && searchQuery" class="py-6 text-center text-xs text-slate-400 font-medium">
           No pages found for "{{ searchQuery }}"
         </div>
       </div>

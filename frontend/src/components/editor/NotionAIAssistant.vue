@@ -1,19 +1,19 @@
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+    class="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-slate-950/40 backdrop-blur-md animate-fade-in"
     @click.self="close"
   >
     <div
-      class="w-full max-w-xl rounded-3xl bg-white dark:bg-[#202020] border border-purple-200 dark:border-purple-900/50 shadow-2xl overflow-hidden p-5 animate-scale-in"
+      class="w-full max-w-xl rounded-3xl liquid-glass-modal border border-purple-500/30 shadow-[0_20px_50px_rgba(168,85,247,0.15)] overflow-hidden p-6 animate-scale-in"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-bold text-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-extrabold text-sm">
           <Sparkles class="w-4 h-4 animate-pulse" />
           <span>Notion AI Assistant</span>
         </div>
-        <button class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" @click="close">
+        <button class="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-white/40 dark:hover:bg-white/10 transition-colors" @click="close">
           <X class="w-4 h-4" />
         </button>
       </div>
@@ -24,12 +24,12 @@
           v-model="customPrompt"
           type="text"
           placeholder="Ask AI to write, summarize, brainstorm, or edit..."
-          class="w-full px-4 py-3 rounded-2xl text-xs bg-slate-50 dark:bg-[#2a2a2a] border border-purple-300 dark:border-purple-800/60 text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-purple-500/50"
+          class="w-full pl-4 pr-28 py-3 rounded-2xl text-xs liquid-glass-input border-purple-400/50 dark:border-purple-600/50 text-slate-900 dark:text-slate-100 outline-none font-medium"
           :disabled="isGenerating"
           @keydown.enter="runAIPrompt(customPrompt)"
         />
         <button
-          class="absolute right-2 top-2 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-purple-600 hover:bg-purple-500 transition-all flex items-center gap-1"
+          class="absolute right-1.5 top-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-md shadow-purple-500/25 transition-all flex items-center gap-1.5 disabled:opacity-50"
           :disabled="isGenerating || !customPrompt.trim()"
           @click="runAIPrompt(customPrompt)"
         >
@@ -39,40 +39,40 @@
       </div>
 
       <!-- Quick Preset Actions -->
-      <div class="grid grid-cols-2 gap-2 mb-4">
+      <div class="grid grid-cols-2 gap-2.5 mb-4">
         <button
           v-for="action in aiActions"
           :key="action.title"
-          class="p-2.5 rounded-2xl text-left border border-slate-100 dark:border-[#2f2f2f] hover:border-purple-400 dark:hover:border-purple-600 hover:bg-purple-50/50 dark:hover:bg-purple-950/20 transition-all group"
+          class="p-3 rounded-2xl text-left liquid-glass-card hover:border-purple-400 dark:hover:border-purple-500 transition-all group border border-white/40 dark:border-white/10"
           :disabled="isGenerating"
           @click="runAction(action)"
         >
-          <div class="flex items-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-200 group-hover:text-purple-600 dark:group-hover:text-purple-400">
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-purple-600 dark:group-hover:text-purple-400">
             <component :is="action.icon" class="w-3.5 h-3.5 text-purple-500" />
             <span>{{ action.title }}</span>
           </div>
-          <p class="text-[10px] text-slate-400 mt-0.5">{{ action.description }}</p>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-normal">{{ action.description }}</p>
         </button>
       </div>
 
       <!-- AI Live Result Box -->
-      <div v-if="aiResult" class="p-3.5 rounded-2xl bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900/60 mb-4 animate-fade-in">
+      <div v-if="aiResult" class="p-4 rounded-2xl bg-purple-500/10 backdrop-blur-md border border-purple-500/30 mb-4 animate-fade-in">
         <div class="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-1 flex items-center justify-between">
           <span>AI Generated Output</span>
           <span class="text-[10px] font-normal text-slate-400">Ready to insert</span>
         </div>
-        <p class="text-xs text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed">
+        <p class="text-xs text-slate-900 dark:text-slate-100 whitespace-pre-wrap leading-relaxed font-medium">
           {{ aiResult }}
         </p>
         <div class="flex items-center justify-end gap-2 mt-3">
           <button
-            class="px-3 py-1 rounded-xl text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            class="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             @click="aiResult = ''"
           >
             Discard
           </button>
           <button
-            class="px-3.5 py-1 rounded-xl text-xs font-semibold text-white bg-purple-600 hover:bg-purple-500 shadow-md flex items-center gap-1"
+            class="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-md flex items-center gap-1.5"
             @click="insertIntoDocument"
           >
             <Check class="w-3.5 h-3.5" />
@@ -98,6 +98,7 @@ import {
   Check,
 } from 'lucide-vue-next'
 import { useWorkspaceStore } from '@/stores/workspace'
+import aiService from '@/services/ai'
 
 const props = defineProps<{
   isOpen: boolean
@@ -160,29 +161,17 @@ async function runAction(action: typeof aiActions[0]) {
     .filter(Boolean)
     .join('\n')
 
-  setTimeout(() => {
-    switch (action.type) {
-      case 'summary':
-        aiResult.value = `### 📌 Executive Summary\n- **Project Scope**: Full-stack real-time collaboration workspace with STOMP WebSockets and reactive optimistic state.\n- **Status**: Backend Spring Boot 3 running seamlessly on port 8088 with flyway migrations.\n- **Next Milestones**: Multi-user live editing, database persistence, and customizable document canvas.`
-        break
-      case 'action_items':
-        aiResult.value = `- [ ] Configure PostgreSQL high-availability replication\n- [ ] Add real-time user mention notifications (@user)\n- [ ] Finalize end-to-end integration tests\n- [ ] Deploy production Vite bundle`
-        break
-      case 'improve':
-        aiResult.value = `This document outlines our engineering roadmap, architected for high concurrency, seamless real-time WebSocket synchronization, and modern web aesthetics.`
-        break
-      case 'translate_khmer':
-        aiResult.value = `### ឯកសារការងារ\nនេះជាប្រព័ន្ធសហការការងារក្នុងពេលជាក់ស្ដែងដែលបង្កើតឡើងដោយប្រើប្រាស់ Java Spring Boot និង Vue 3។`
-        break
-      case 'brainstorm':
-        aiResult.value = `1. **AI Voice-to-Note**: Automatically transcribe voice memos into formatted blocks.\n2. **Smart Database Rollups**: Cross-table relations and formula columns.\n3. **Public Share Links**: Read-only guest sharing with custom domain support.\n4. **Webhooks & Automation**: Trigger external webhooks on block updates.\n5. **Version History**: Time-travel revisions with diff inspection.`
-        break
-      case 'code':
-        aiResult.value = `@RestController\n@RequestMapping("/api/v1/workspace")\npublic class WorkspaceApiController {\n    @GetMapping("/{id}/summary")\n    public ResponseEntity<WorkspaceSummary> getSummary(@PathVariable UUID id) {\n        return ResponseEntity.ok(workspaceService.getSummary(id));\n    }\n}`
-        break
-    }
+  try {
+    const res = await aiService.generate({
+      actionType: action.type,
+      contextText: docText,
+    })
+    aiResult.value = res.result
+  } catch {
+    aiResult.value = 'Failed to generate AI completion. Please check network connection.'
+  } finally {
     isGenerating.value = false
-  }, 700)
+  }
 }
 
 async function runAIPrompt(promptText: string) {
@@ -190,10 +179,23 @@ async function runAIPrompt(promptText: string) {
   isGenerating.value = true
   aiResult.value = ''
 
-  setTimeout(() => {
-    aiResult.value = `### ✨ AI Response to "${promptText}"\n\nHere is the generated output based on your workspace context:\n- Architected for high scalability and modularity.\n- Integrated with reactive Vue 3 store and Spring Security authentication.\n- Ready for instant deployment and team collaboration.`
+  const docText = workspaceStore.documentBlocks
+    .map((b) => b.content.text)
+    .filter(Boolean)
+    .join('\n')
+
+  try {
+    const res = await aiService.generate({
+      prompt: promptText.trim(),
+      actionType: 'custom',
+      contextText: docText,
+    })
+    aiResult.value = res.result
+  } catch {
+    aiResult.value = 'Failed to generate AI completion. Please try again.'
+  } finally {
     isGenerating.value = false
-  }, 800)
+  }
 }
 
 async function insertIntoDocument() {
