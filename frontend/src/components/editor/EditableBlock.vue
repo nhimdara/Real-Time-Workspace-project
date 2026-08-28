@@ -168,6 +168,12 @@ defineExpose({
 </script>
 
 <style scoped>
+.editable-text {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
+
 .editable-text:empty:before {
   content: attr(data-placeholder);
   color: rgb(148 163 184 / 0.7);

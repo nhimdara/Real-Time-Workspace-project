@@ -1,5 +1,5 @@
 <template>
-  <div class="my-3 overflow-x-auto rounded-2xl border border-slate-200 dark:border-[#2f2f2f] shadow-sm bg-white dark:bg-[#1f1f1f] select-none p-1">
+  <div class="my-3 overflow-x-auto rounded-2xl border border-slate-200 dark:border-[#2f2f2f] shadow-sm bg-white dark:bg-[#1f1f1f] p-1">
     <!-- Top Table Header Options -->
     <div class="flex items-center justify-between px-3 py-1.5 border-b border-slate-100 dark:border-[#2a2a2a] text-[11px] text-slate-400">
       <div class="flex items-center gap-3">

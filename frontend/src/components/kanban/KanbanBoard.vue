@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex-1 overflow-x-auto p-3 sm:p-6 min-h-[calc(100vh-140px)] select-none"
+    class="flex-1 overflow-x-auto p-3 sm:p-6 min-h-[calc(100vh-140px)]"
     @mousemove="handleMouseMove"
   >
     <!-- Board Header -->
