@@ -27,6 +27,6 @@ else
   echo "  • Backend Status: Active on http://localhost:8088"
   echo "  • Frontend Assets: frontend/dist/"
   echo ""
-  echo "🚀 Serving production frontend build on http://localhost:3000..."
-  npx serve frontend/dist -p 3000
+  echo "🚀 Serving production frontend build on http://0.0.0.0:3000..."
+  npx serve frontend/dist -p 3000 --host 0.0.0.0
 fi
