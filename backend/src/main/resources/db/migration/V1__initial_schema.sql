@@ -3,7 +3,7 @@
 
 -- Users Table
 CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     name VARCHAR(100) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Workspaces Table
 CREATE TABLE IF NOT EXISTS workspaces (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     slug VARCHAR(150) NOT NULL UNIQUE,
     owner_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS workspaces (
 
 -- Workspace Members Table
 CREATE TABLE IF NOT EXISTS workspace_members (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     role VARCHAR(50) NOT NULL DEFAULT 'MEMBER',
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS workspace_members (
 
 -- Pages Table (Documents & Kanban Boards)
 CREATE TABLE IF NOT EXISTS pages (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
     parent_page_id UUID REFERENCES pages(id) ON DELETE SET NULL,
     title VARCHAR(255) NOT NULL DEFAULT 'Untitled',
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS pages (
 
 -- Blocks Table (Hierarchical Content & Kanban Items with JSONB Content)
 CREATE TABLE IF NOT EXISTS blocks (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     page_id UUID NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
     parent_id UUID,
     type VARCHAR(50) NOT NULL DEFAULT 'paragraph',
