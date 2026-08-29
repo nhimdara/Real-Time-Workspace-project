@@ -44,7 +44,7 @@ export const useAuthStore = defineStore('auth', () => {
       await wsService.connect(res.data.token)
       return res.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Invalid email or password'
+      error.value = err.response?.data?.details?.[0] || err.response?.data?.message || 'Invalid email or password'
       throw err
     } finally {
       loading.value = false
@@ -65,7 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
       await wsService.connect(res.data.token)
       return res.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Registration failed'
+      error.value = err.response?.data?.details?.[0] || err.response?.data?.message || 'Registration failed'
       throw err
     } finally {
       loading.value = false
