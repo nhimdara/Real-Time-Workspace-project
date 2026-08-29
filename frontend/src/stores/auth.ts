@@ -40,8 +40,10 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('workspace_token', res.data.token)
       localStorage.setItem('workspace_user', JSON.stringify(res.data.user))
       
-      // Connect WebSocket with new token
-      await wsService.connect(res.data.token)
+      // Connect WebSocket asynchronously in background
+      wsService.connect(res.data.token).catch((err) => {
+        console.warn('WebSocket connection background notice:', err)
+      })
       return res.data
     } catch (err: any) {
       error.value = err.response?.data?.details?.[0] || err.response?.data?.message || 'Invalid email or password'
@@ -61,8 +63,10 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('workspace_token', res.data.token)
       localStorage.setItem('workspace_user', JSON.stringify(res.data.user))
 
-      // Connect WebSocket with new token
-      await wsService.connect(res.data.token)
+      // Connect WebSocket asynchronously in background
+      wsService.connect(res.data.token).catch((err) => {
+        console.warn('WebSocket connection background notice:', err)
+      })
       return res.data
     } catch (err: any) {
       error.value = err.response?.data?.details?.[0] || err.response?.data?.message || 'Registration failed'

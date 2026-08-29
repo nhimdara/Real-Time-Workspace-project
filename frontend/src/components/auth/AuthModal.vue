@@ -129,7 +129,7 @@ async function handleSubmit() {
     }
     await workspaceStore.fetchWorkspaces()
   } catch (err: any) {
-    errorMessage.value = authStore.error || 'Authentication error'
+    errorMessage.value = authStore.error || err?.response?.data?.details?.[0] || err?.response?.data?.message || (isLogin.value ? 'Invalid email or password' : 'Registration failed')
   }
 }
 </script>
