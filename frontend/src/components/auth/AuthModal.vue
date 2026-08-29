@@ -90,49 +90,6 @@
         </button>
       </form>
 
-      <!-- Demo One-Click Logins -->
-      <div class="mt-6 pt-6 border-t border-white/40 dark:border-white/10">
-        <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center mb-3">
-          Quick Demo Accounts (1-Click Login)
-        </p>
-        <div class="grid grid-cols-3 gap-2.5">
-          <button
-            type="button"
-            class="p-2.5 rounded-2xl liquid-glass-card text-center transition-all group border border-white/40 dark:border-white/10"
-            @click="quickLogin('alex@workspace.io', 'password123')"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces"
-              class="w-8 h-8 rounded-full mx-auto mb-1 border-2 border-brand-500/60 shadow-sm group-hover:scale-110 transition-transform"
-            />
-            <span class="text-[10px] font-bold block truncate text-slate-800 dark:text-slate-200">Alex (Lead)</span>
-          </button>
-
-          <button
-            type="button"
-            class="p-2.5 rounded-2xl liquid-glass-card text-center transition-all group border border-white/40 dark:border-white/10"
-            @click="quickLogin('sarah@workspace.io', 'password123')"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=faces"
-              class="w-8 h-8 rounded-full mx-auto mb-1 border-2 border-brand-500/60 shadow-sm group-hover:scale-110 transition-transform"
-            />
-            <span class="text-[10px] font-bold block truncate text-slate-800 dark:text-slate-200">Sarah (Dev)</span>
-          </button>
-
-          <button
-            type="button"
-            class="p-2.5 rounded-2xl liquid-glass-card text-center transition-all group border border-white/40 dark:border-white/10"
-            @click="quickLogin('marcus@workspace.io', 'password123')"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces"
-              class="w-8 h-8 rounded-full mx-auto mb-1 border-2 border-brand-500/60 shadow-sm group-hover:scale-110 transition-transform"
-            />
-            <span class="text-[10px] font-bold block truncate text-slate-800 dark:text-slate-200">Marcus (UX)</span>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -174,12 +131,5 @@ async function handleSubmit() {
   } catch (err: any) {
     errorMessage.value = authStore.error || 'Authentication error'
   }
-}
-
-async function quickLogin(email: string, pass: string) {
-  form.email = email
-  form.password = pass
-  isLogin.value = true
-  await handleSubmit()
 }
 </script>
