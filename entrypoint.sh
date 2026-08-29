@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export PORT="${PORT:-80}"
+export PORT="${PORT:-10000}"
 echo "🚀 Starting Real-Time Workspace Platform on PORT=${PORT}..."
 
 # Substitute $PORT variable into Nginx configuration
