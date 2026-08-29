@@ -1,9 +1,6 @@
 -- V1__initial_schema.sql
 -- Real-Time Workspace Platform Initial DDL Schema
 
--- Enable UUID extension if supported
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 -- Users Table
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -54,7 +51,7 @@ CREATE TABLE IF NOT EXISTS blocks (
     page_id UUID NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
     parent_id UUID,
     type VARCHAR(50) NOT NULL DEFAULT 'paragraph',
-    content JSONB NOT NULL DEFAULT '{}'::jsonb,
+    content JSONB NOT NULL DEFAULT '{}',
     position INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -72,4 +69,3 @@ CREATE INDEX IF NOT EXISTS idx_pages_position ON pages(workspace_id, position);
 CREATE INDEX IF NOT EXISTS idx_blocks_page ON blocks(page_id);
 CREATE INDEX IF NOT EXISTS idx_blocks_parent ON blocks(parent_id);
 CREATE INDEX IF NOT EXISTS idx_blocks_page_position ON blocks(page_id, position);
-CREATE INDEX IF NOT EXISTS idx_blocks_content_gin ON blocks USING gin (content);
