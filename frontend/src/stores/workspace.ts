@@ -131,22 +131,24 @@ export const useWorkspaceStore = defineStore('workspace', () => {
     // Fetch blocks
     await fetchBlocks(pageId)
 
-    // Ensure WebSocket connected
-    await wsService.connect()
-
-    // Subscribe to real-time events for this page
-    activeUnsubscribe.value = wsService.subscribeToPage(pageId, handleRealtimeEvent)
-
-    // Broadcast user joined
-    if (authStore.user) {
-      wsService.sendEvent(pageId, {
-        type: 'USER_JOIN',
-        senderId: authStore.user.id,
-        senderName: authStore.user.name,
-        senderAvatar: authStore.user.avatarUrl,
-        payload: { userId: authStore.user.id },
+    // Connect WebSocket and subscribe in background without blocking page render
+    wsService
+      .connect()
+      .then(() => {
+        activeUnsubscribe.value = wsService.subscribeToPage(pageId, handleRealtimeEvent)
+        if (authStore.user) {
+          wsService.sendEvent(pageId, {
+            type: 'USER_JOIN',
+            senderId: authStore.user.id,
+            senderName: authStore.user.name,
+            senderAvatar: authStore.user.avatarUrl,
+            payload: { userId: authStore.user.id },
+          })
+        }
       })
-    }
+      .catch((err) => {
+        console.warn('WebSocket connection background notice:', err)
+      })
   }
 
   async function createPage(data: { title: string; icon?: string; isKanban?: boolean; parentPageId?: string | null }) {

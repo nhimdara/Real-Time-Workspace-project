@@ -127,9 +127,16 @@ async function handleSubmit() {
         password: form.password,
       })
     }
-    await workspaceStore.fetchWorkspaces()
   } catch (err: any) {
     errorMessage.value = authStore.error || err?.response?.data?.details?.[0] || err?.response?.data?.message || (isLogin.value ? 'Invalid email or password' : 'Registration failed')
+    return
+  }
+
+  // After HTTP auth completes successfully, load workspace state safely
+  try {
+    await workspaceStore.fetchWorkspaces()
+  } catch (err) {
+    console.warn('Workspace initial fetch notice:', err)
   }
 }
 </script>
