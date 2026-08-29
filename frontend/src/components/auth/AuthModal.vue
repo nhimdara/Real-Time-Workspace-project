@@ -21,16 +21,18 @@
       <!-- Tab Switcher -->
       <div class="flex p-1 mb-6 rounded-2xl liquid-glass border border-white/40 dark:border-white/10">
         <button
+          type="button"
           class="flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200"
           :class="isLogin ? 'liquid-glass-btn text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
-          @click="isLogin = true"
+          @click="switchTab(true)"
         >
           Sign In
         </button>
         <button
+          type="button"
           class="flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200"
           :class="!isLogin ? 'liquid-glass-btn text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
-          @click="isLogin = false"
+          @click="switchTab(false)"
         >
           Register
         </button>
@@ -112,6 +114,11 @@ const form = reactive({
   password: '',
 })
 
+function switchTab(login: boolean) {
+  isLogin.value = login
+  errorMessage.value = null
+}
+
 async function handleSubmit() {
   errorMessage.value = null
   try {
@@ -128,7 +135,9 @@ async function handleSubmit() {
       })
     }
   } catch (err: any) {
-    errorMessage.value = authStore.error || err?.response?.data?.details?.[0] || err?.response?.data?.message || (isLogin.value ? 'Invalid email or password' : 'Registration failed')
+    const serverDetails = err?.response?.data?.details
+    const detailMsg = Array.isArray(serverDetails) && serverDetails.length > 0 ? serverDetails.join(', ') : null
+    errorMessage.value = detailMsg || err?.response?.data?.message || authStore.error || (isLogin.value ? 'Invalid email or password' : 'Registration failed')
     return
   }
 

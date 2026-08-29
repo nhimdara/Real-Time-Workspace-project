@@ -62,7 +62,7 @@ public class AuthService {
 
         // Create a default Personal Workspace for the new user
         String shortId = user.getId().toString().substring(0, 8);
-        String nameSlug = user.getName().toLowerCase().replaceAll("[^a-z0-9]", "-").replaceAll("-+", "-");
+        String nameSlug = user.getName().toLowerCase().trim().replaceAll("[^a-z0-9]+", "-").replaceAll("^-+|-+$", "");
         if (nameSlug.isEmpty()) {
             nameSlug = "user";
         }
@@ -92,19 +92,28 @@ public class AuthService {
                 .build();
         defaultPage = pageRepository.saveAndFlush(defaultPage);
 
-        // Create initial welcoming blocks
+        // Create initial welcoming blocks using mutable maps for Hibernate JSONB compatibility
+        Map<String, Object> headingContent = new java.util.HashMap<>();
+        headingContent.put("text", "Welcome to your new workspace, " + user.getName() + "!");
+
         Block welcomeHeading = Block.builder()
                 .page(defaultPage)
                 .type("heading_1")
-                .content(Map.of("text", "Welcome to your new workspace, " + user.getName() + "!"))
+                .content(headingContent)
                 .position(0)
                 .build();
+
+        Map<String, Object> calloutContent = new java.util.HashMap<>();
+        calloutContent.put("text", "Start typing or use / commands to build Notion-style docs and Kanban boards.");
+        calloutContent.put("icon", "💡");
+
         Block welcomeCallout = Block.builder()
                 .page(defaultPage)
                 .type("callout")
-                .content(Map.of("text", "Start typing or use / commands to build Notion-style docs and Kanban boards.", "icon", "💡"))
+                .content(calloutContent)
                 .position(1)
                 .build();
+
         blockRepository.save(welcomeHeading);
         blockRepository.save(welcomeCallout);
 
