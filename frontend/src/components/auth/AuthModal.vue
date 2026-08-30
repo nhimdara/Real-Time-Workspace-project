@@ -41,10 +41,21 @@
       <!-- Error Alert -->
       <div
         v-if="errorMessage"
-        class="mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-500 dark:text-red-400 text-xs flex items-center gap-2 backdrop-blur-md"
+        class="mb-4 p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-500 dark:text-red-400 text-xs flex flex-col gap-2 backdrop-blur-md animate-fade-in"
       >
-        <AlertTriangle class="w-4 h-4 shrink-0" />
-        <span>{{ errorMessage }}</span>
+        <div class="flex items-center gap-2">
+          <AlertTriangle class="w-4 h-4 shrink-0 text-red-400" />
+          <span class="font-medium">{{ errorMessage }}</span>
+        </div>
+        <!-- Smart quick action if user already exists -->
+        <button
+          v-if="!isLogin && errorMessage.toLowerCase().includes('already registered')"
+          type="button"
+          @click="switchTab(true)"
+          class="text-left text-xs font-semibold text-brand-400 hover:underline flex items-center gap-1 pl-6"
+        >
+          <span>→ Click here to Sign In with this email instead</span>
+        </button>
       </div>
 
       <!-- Form -->
@@ -86,11 +97,44 @@
         <button
           type="submit"
           :disabled="authStore.loading"
-          class="w-full py-3 rounded-xl text-xs font-bold text-white liquid-glass-btn disabled:opacity-50 transition-all mt-2"
+          class="w-full py-3 rounded-xl text-xs font-bold text-white liquid-glass-btn disabled:opacity-50 transition-all mt-2 cursor-pointer shadow-lg hover:shadow-brand-500/25"
         >
           {{ authStore.loading ? 'Authenticating...' : (isLogin ? 'Sign In' : 'Create Account') }}
         </button>
       </form>
+
+      <!-- Demo Accounts Quick Sign-in -->
+      <div class="mt-6 pt-5 border-t border-white/10">
+        <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400 text-center mb-2.5">
+          Quick Demo Accounts (1-Click Login):
+        </p>
+        <div class="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            @click="quickLogin('alex@workspace.io', 'password123')"
+            :disabled="authStore.loading"
+            class="px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-slate-300 hover:text-white transition-all text-center truncate"
+          >
+            Alex Morgan
+          </button>
+          <button
+            type="button"
+            @click="quickLogin('sarah@workspace.io', 'password123')"
+            :disabled="authStore.loading"
+            class="px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-slate-300 hover:text-white transition-all text-center truncate"
+          >
+            Sarah Chen
+          </button>
+          <button
+            type="button"
+            @click="quickLogin('marcus@workspace.io', 'password123')"
+            :disabled="authStore.loading"
+            class="px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-slate-300 hover:text-white transition-all text-center truncate"
+          >
+            Marcus Vance
+          </button>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -117,6 +161,13 @@ const form = reactive({
 function switchTab(login: boolean) {
   isLogin.value = login
   errorMessage.value = null
+}
+
+async function quickLogin(email: string, pass: string) {
+  form.email = email
+  form.password = pass
+  isLogin.value = true
+  await handleSubmit()
 }
 
 async function handleSubmit() {

@@ -46,8 +46,17 @@ export const useAuthStore = defineStore('auth', () => {
       })
       return res.data
     } catch (err: any) {
-      error.value = err.response?.data?.details?.[0] || err.response?.data?.message
-        || (!err.response ? 'Server is waking up (free hosting). Please try again in a moment.' : 'Invalid email or password')
+      const serverDetails = err.response?.data?.details
+      const detailStr = Array.isArray(serverDetails) && serverDetails.length > 0 ? serverDetails.join(', ') : null
+      const msg = detailStr || err.response?.data?.message || err.response?.data?.error
+      
+      if (msg) {
+        error.value = msg
+      } else if (!err.response || err.code === 'ECONNABORTED' || err.response?.status >= 500) {
+        error.value = 'Backend server is unreachable. Please ensure the backend is running on port 8088.'
+      } else {
+        error.value = 'Invalid email or password'
+      }
       throw err
     } finally {
       loading.value = false
@@ -70,8 +79,17 @@ export const useAuthStore = defineStore('auth', () => {
       })
       return res.data
     } catch (err: any) {
-      error.value = err.response?.data?.details?.[0] || err.response?.data?.message
-        || (!err.response ? 'Server is waking up (free hosting). Please try again in a moment.' : 'Registration failed')
+      const serverDetails = err.response?.data?.details
+      const detailStr = Array.isArray(serverDetails) && serverDetails.length > 0 ? serverDetails.join(', ') : null
+      const msg = detailStr || err.response?.data?.message || err.response?.data?.error
+      
+      if (msg) {
+        error.value = msg
+      } else if (!err.response || err.code === 'ECONNABORTED' || err.response?.status >= 500) {
+        error.value = 'Backend server is unreachable. Please ensure the backend is running on port 8088.'
+      } else {
+        error.value = 'Registration failed. Please check your details.'
+      }
       throw err
     } finally {
       loading.value = false
