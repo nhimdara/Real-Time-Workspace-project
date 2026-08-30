@@ -19,13 +19,24 @@ trap cleanup SIGTERM SIGINT
 
 # Start Java Spring Boot backend in background
 echo "☕ Launching Spring Boot Backend Service..."
-# Cap the heap so the JVM fits within small containers (e.g. Render free tier = 512MB).
-# Without this the backend can be OOM-killed, leaving nginx to return 502 on /api
-# (which surfaces in the UI as "registration failed" / "login failed").
 JAVA_OPTS="${JAVA_OPTS:--XX:MaxRAMPercentage=70.0 -XX:+UseSerialGC -XX:MaxMetaspaceSize=128m}"
 java $JAVA_OPTS -jar /app/app.jar &
 JAVA_PID=$!
 
+# Wait for Spring Boot backend to be ready on port 8088 (max 45 seconds)
+echo "⏳ Waiting for Spring Boot backend to initialize on port 8088..."
+MAX_WAIT=45
+WAIT_COUNT=0
+while ! (exec 3<>/dev/tcp/127.0.0.1/8088) 2>/dev/null; do
+    sleep 1
+    WAIT_COUNT=$((WAIT_COUNT + 1))
+    if [ "$WAIT_COUNT" -ge "$MAX_WAIT" ]; then
+        echo "⚠️ Backend startup took longer than expected, starting Nginx anyway..."
+        break
+    fi
+done
+exec 3>&- 2>/dev/null || true
+echo "✅ Backend ready or proceeding! Launching Nginx Web Server..."
+
 # Start Nginx web server in foreground
-echo "🌐 Launching Nginx Web Server..."
 exec nginx -g "daemon off;"

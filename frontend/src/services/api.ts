@@ -44,10 +44,10 @@ api.interceptors.response.use(
 
     if (config && isTransient) {
       config._retryCount = config._retryCount ?? 0
-      if (config._retryCount < 3) {
+      if (config._retryCount < 4) {
         config._retryCount += 1
-        // Backoff: 1s, 2s, 4s — enough to ride out a free-tier cold start.
-        await sleep(1000 * 2 ** (config._retryCount - 1))
+        const delays = [1500, 3000, 5000, 8000]
+        await sleep(delays[config._retryCount - 1] || 3000)
         return api(config)
       }
     }
