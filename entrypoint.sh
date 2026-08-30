@@ -19,7 +19,11 @@ trap cleanup SIGTERM SIGINT
 
 # Start Java Spring Boot backend in background
 echo "☕ Launching Spring Boot Backend Service..."
-java -jar /app/app.jar &
+# Cap the heap so the JVM fits within small containers (e.g. Render free tier = 512MB).
+# Without this the backend can be OOM-killed, leaving nginx to return 502 on /api
+# (which surfaces in the UI as "registration failed" / "login failed").
+JAVA_OPTS="${JAVA_OPTS:--XX:MaxRAMPercentage=70.0 -XX:+UseSerialGC -XX:MaxMetaspaceSize=128m}"
+java $JAVA_OPTS -jar /app/app.jar &
 JAVA_PID=$!
 
 # Start Nginx web server in foreground
