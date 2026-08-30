@@ -46,7 +46,8 @@ export const useAuthStore = defineStore('auth', () => {
       })
       return res.data
     } catch (err: any) {
-      error.value = err.response?.data?.details?.[0] || err.response?.data?.message || 'Invalid email or password'
+      error.value = err.response?.data?.details?.[0] || err.response?.data?.message
+        || (!err.response ? 'Server is waking up (free hosting). Please try again in a moment.' : 'Invalid email or password')
       throw err
     } finally {
       loading.value = false
@@ -69,7 +70,8 @@ export const useAuthStore = defineStore('auth', () => {
       })
       return res.data
     } catch (err: any) {
-      error.value = err.response?.data?.details?.[0] || err.response?.data?.message || 'Registration failed'
+      error.value = err.response?.data?.details?.[0] || err.response?.data?.message
+        || (!err.response ? 'Server is waking up (free hosting). Please try again in a moment.' : 'Registration failed')
       throw err
     } finally {
       loading.value = false
