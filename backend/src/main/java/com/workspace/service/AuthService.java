@@ -45,77 +45,86 @@ public class AuthService {
     @Transactional
     public AuthDTOs.AuthResponse register(AuthDTOs.RegisterRequest request) {
         String cleanEmail = request.getEmail().toLowerCase().trim();
-        if (userRepository.existsByEmail(cleanEmail)) {
-            throw new Exceptions.BadRequestException("Email is already registered");
+        User user = userRepository.findByEmail(cleanEmail).orElse(null);
+
+        if (user != null) {
+            // If user already exists, update their password and name smoothly
+            user.setName(request.getName().trim());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            if (request.getAvatarUrl() != null && !request.getAvatarUrl().isBlank()) {
+                user.setAvatarUrl(request.getAvatarUrl());
+            }
+            user = userRepository.saveAndFlush(user);
+        } else {
+            user = User.builder()
+                    .email(cleanEmail)
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .name(request.getName().trim())
+                    .avatarUrl(request.getAvatarUrl() != null && !request.getAvatarUrl().isBlank()
+                            ? request.getAvatarUrl()
+                            : "https://api.dicebear.com/7.x/bottts/svg?seed=" + cleanEmail)
+                    .build();
+            user = userRepository.saveAndFlush(user);
         }
 
-        User user = User.builder()
-                .email(cleanEmail)
-                .password(passwordEncoder.encode(request.getPassword()))
-                .name(request.getName().trim())
-                .avatarUrl(request.getAvatarUrl() != null && !request.getAvatarUrl().isBlank()
-                        ? request.getAvatarUrl()
-                        : "https://api.dicebear.com/7.x/bottts/svg?seed=" + cleanEmail)
-                .build();
+        // Ensure user has at least one workspace
+        if (workspaceRepository.findWorkspacesForUser(user.getId()).isEmpty()) {
+            String shortId = user.getId().toString().substring(0, 8);
+            String nameSlug = user.getName().toLowerCase().trim().replaceAll("[^a-z0-9]+", "-").replaceAll("^-+|-+$", "");
+            if (nameSlug.isEmpty()) {
+                nameSlug = "user";
+            }
+            String slug = "workspace-" + nameSlug + "-" + shortId;
 
-        user = userRepository.saveAndFlush(user);
+            Workspace defaultWorkspace = Workspace.builder()
+                    .name(user.getName() + "'s Workspace")
+                    .slug(slug)
+                    .owner(user)
+                    .build();
+            defaultWorkspace = workspaceRepository.saveAndFlush(defaultWorkspace);
 
-        // Create a default Personal Workspace for the new user
-        String shortId = user.getId().toString().substring(0, 8);
-        String nameSlug = user.getName().toLowerCase().trim().replaceAll("[^a-z0-9]+", "-").replaceAll("^-+|-+$", "");
-        if (nameSlug.isEmpty()) {
-            nameSlug = "user";
+            WorkspaceMember ownerMember = WorkspaceMember.builder()
+                    .workspace(defaultWorkspace)
+                    .user(user)
+                    .role("OWNER")
+                    .build();
+            workspaceMemberRepository.saveAndFlush(ownerMember);
+
+            // Create initial default document page for the workspace
+            Page defaultPage = Page.builder()
+                    .workspace(defaultWorkspace)
+                    .title("Welcome to Your Workspace")
+                    .icon("🚀")
+                    .isKanban(false)
+                    .position(0)
+                    .build();
+            defaultPage = pageRepository.saveAndFlush(defaultPage);
+
+            // Create initial welcoming blocks using mutable maps for Hibernate JSONB compatibility
+            Map<String, Object> headingContent = new java.util.HashMap<>();
+            headingContent.put("text", "Welcome to your new workspace, " + user.getName() + "!");
+
+            Block welcomeHeading = Block.builder()
+                    .page(defaultPage)
+                    .type("heading_1")
+                    .content(headingContent)
+                    .position(0)
+                    .build();
+
+            Map<String, Object> calloutContent = new java.util.HashMap<>();
+            calloutContent.put("text", "Start typing or use / commands to build Notion-style docs and Kanban boards.");
+            calloutContent.put("icon", "💡");
+
+            Block welcomeCallout = Block.builder()
+                    .page(defaultPage)
+                    .type("callout")
+                    .content(calloutContent)
+                    .position(1)
+                    .build();
+
+            blockRepository.save(welcomeHeading);
+            blockRepository.save(welcomeCallout);
         }
-        String slug = "workspace-" + nameSlug + "-" + shortId;
-
-        Workspace defaultWorkspace = Workspace.builder()
-                .name(user.getName() + "'s Workspace")
-                .slug(slug)
-                .owner(user)
-                .build();
-        defaultWorkspace = workspaceRepository.saveAndFlush(defaultWorkspace);
-
-        WorkspaceMember ownerMember = WorkspaceMember.builder()
-                .workspace(defaultWorkspace)
-                .user(user)
-                .role("OWNER")
-                .build();
-        workspaceMemberRepository.saveAndFlush(ownerMember);
-
-        // Create initial default document page for the workspace
-        Page defaultPage = Page.builder()
-                .workspace(defaultWorkspace)
-                .title("Welcome to Your Workspace")
-                .icon("🚀")
-                .isKanban(false)
-                .position(0)
-                .build();
-        defaultPage = pageRepository.saveAndFlush(defaultPage);
-
-        // Create initial welcoming blocks using mutable maps for Hibernate JSONB compatibility
-        Map<String, Object> headingContent = new java.util.HashMap<>();
-        headingContent.put("text", "Welcome to your new workspace, " + user.getName() + "!");
-
-        Block welcomeHeading = Block.builder()
-                .page(defaultPage)
-                .type("heading_1")
-                .content(headingContent)
-                .position(0)
-                .build();
-
-        Map<String, Object> calloutContent = new java.util.HashMap<>();
-        calloutContent.put("text", "Start typing or use / commands to build Notion-style docs and Kanban boards.");
-        calloutContent.put("icon", "💡");
-
-        Block welcomeCallout = Block.builder()
-                .page(defaultPage)
-                .type("callout")
-                .content(calloutContent)
-                .position(1)
-                .build();
-
-        blockRepository.save(welcomeHeading);
-        blockRepository.save(welcomeCallout);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String token = jwtService.generateToken(userDetails, user.getId(), user.getName());
